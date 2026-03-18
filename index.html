@@ -1,0 +1,1888 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>TableSpark — Every Meal Rescued Is a Hunger Erased</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,700;9..40,800&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #FAFAF7;
+      --surface: #FFFFFF;
+      --text: #2D2A26;
+      --muted: #8A8578;
+      --primary: #E8703A;
+      --secondary: #3A7D6E;
+      --accent: #F4B942;
+      --donate: #D94E4E;
+      --radius: 20px;
+      --radius-sm: 12px;
+      --shadow: 0 4px 24px rgba(45,42,38,0.08);
+      --shadow-lg: 0 12px 48px rgba(45,42,38,0.12);
+      --glass-bg: rgba(255,255,255,0.7);
+      --glass-border: rgba(255,255,255,0.4);
+      --transition: 0.3s cubic-bezier(0.4,0,0.2,1);
+    }
+
+    *, *::before, *::after {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    html {
+      scroll-behavior: smooth;
+      scroll-padding-top: 80px;
+    }
+
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+      color: var(--text);
+      background: var(--bg);
+      line-height: 1.7;
+      font-size: 16px;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    h1, h2, h3, h4, h5, h6 {
+      font-family: 'DM Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+      line-height: 1.2;
+      font-weight: 800;
+    }
+
+    img {
+      max-width: 100%;
+      display: block;
+    }
+
+    a {
+      text-decoration: none;
+      color: inherit;
+    }
+
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 24px;
+    }
+
+    /* ── NAV ── */
+    .nav {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      z-index: 1000;
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      background: var(--glass-bg);
+      border-bottom: 1px solid var(--glass-border);
+      transition: var(--transition);
+    }
+
+    .nav-inner {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      height: 72px;
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 24px;
+    }
+
+    .nav-logo {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-family: 'DM Sans', sans-serif;
+      font-weight: 800;
+      font-size: 1.4rem;
+      color: var(--primary);
+    }
+
+    .nav-logo svg {
+      width: 36px;
+      height: 36px;
+    }
+
+    .nav-links {
+      display: flex;
+      align-items: center;
+      gap: 32px;
+      list-style: none;
+    }
+
+    .nav-links a {
+      font-weight: 500;
+      font-size: 0.95rem;
+      color: var(--text);
+      transition: color var(--transition);
+      position: relative;
+    }
+
+    .nav-links a:hover,
+    .nav-links a:focus {
+      color: var(--primary);
+    }
+
+    .nav-links a:focus-visible {
+      outline: 2px solid var(--primary);
+      outline-offset: 4px;
+      border-radius: 4px;
+    }
+
+    .nav-donate {
+      background: var(--donate);
+      color: #fff !important;
+      padding: 10px 24px;
+      border-radius: 50px;
+      font-weight: 600;
+      transition: transform var(--transition), box-shadow var(--transition);
+    }
+
+    .nav-donate:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px rgba(217,78,78,0.35);
+    }
+
+    .mobile-toggle {
+      display: none;
+      background: none;
+      border: none;
+      cursor: pointer;
+      padding: 8px;
+    }
+
+    .mobile-toggle span {
+      display: block;
+      width: 24px;
+      height: 2px;
+      background: var(--text);
+      margin: 6px 0;
+      transition: var(--transition);
+    }
+
+    /* ── HERO ── */
+    .hero {
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      position: relative;
+      overflow: hidden;
+      background: linear-gradient(135deg, #FFF7F0 0%, #F0FAF7 50%, #FFF9E6 100%);
+    }
+
+    .hero-bg {
+      position: absolute;
+      inset: 0;
+      z-index: 0;
+    }
+
+    .hero-bg img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      opacity: 0.12;
+    }
+
+    .hero-content {
+      position: relative;
+      z-index: 2;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 60px;
+      align-items: center;
+      padding: 120px 0 80px;
+    }
+
+    .hero-text {
+      max-width: 560px;
+    }
+
+    .hero-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: rgba(232,112,58,0.1);
+      color: var(--primary);
+      padding: 8px 16px;
+      border-radius: 50px;
+      font-size: 0.85rem;
+      font-weight: 600;
+      margin-bottom: 24px;
+    }
+
+    .hero-badge svg {
+      width: 16px;
+      height: 16px;
+    }
+
+    .hero h1 {
+      font-size: clamp(2.5rem, 5vw, 3.8rem);
+      color: var(--text);
+      margin-bottom: 20px;
+      letter-spacing: -0.02em;
+    }
+
+    .hero h1 span {
+      color: var(--primary);
+    }
+
+    .hero-desc {
+      font-size: 1.15rem;
+      color: var(--muted);
+      margin-bottom: 36px;
+      line-height: 1.8;
+    }
+
+    .hero-btns {
+      display: flex;
+      gap: 16px;
+      flex-wrap: wrap;
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 14px 32px;
+      border-radius: 50px;
+      font-weight: 600;
+      font-size: 1rem;
+      border: none;
+      cursor: pointer;
+      transition: transform var(--transition), box-shadow var(--transition);
+      font-family: inherit;
+    }
+
+    .btn:focus-visible {
+      outline: 3px solid var(--primary);
+      outline-offset: 3px;
+    }
+
+    .btn-primary {
+      background: var(--primary);
+      color: #fff;
+    }
+
+    .btn-primary:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 24px rgba(232,112,58,0.35);
+    }
+
+    .btn-donate {
+      background: var(--donate);
+      color: #fff;
+    }
+
+    .btn-donate:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 24px rgba(217,78,78,0.35);
+    }
+
+    .btn-outline {
+      background: transparent;
+      color: var(--text);
+      border: 2px solid var(--text);
+    }
+
+    .btn-outline:hover {
+      background: var(--text);
+      color: var(--bg);
+    }
+
+    .hero-visual {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .hero-illustration {
+      width: 100%;
+      max-width: 480px;
+    }
+
+    .hero-stats {
+      display: flex;
+      gap: 40px;
+      margin-top: 48px;
+    }
+
+    .hero-stat {
+      text-align: left;
+    }
+
+    .hero-stat-num {
+      font-family: 'DM Sans', sans-serif;
+      font-size: 2rem;
+      font-weight: 800;
+      color: var(--primary);
+    }
+
+    .hero-stat-label {
+      font-size: 0.85rem;
+      color: var(--muted);
+      font-weight: 500;
+    }
+
+    /* ── SECTION COMMON ── */
+    .section {
+      padding: 100px 0;
+    }
+
+    .section-label {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      color: var(--primary);
+      font-weight: 700;
+      font-size: 0.85rem;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      margin-bottom: 12px;
+    }
+
+    .section-title {
+      font-size: clamp(2rem, 4vw, 2.8rem);
+      margin-bottom: 20px;
+      letter-spacing: -0.02em;
+    }
+
+    .section-desc {
+      font-size: 1.1rem;
+      color: var(--muted);
+      max-width: 640px;
+      line-height: 1.8;
+    }
+
+    /* ── PROBLEM ── */
+    .problem {
+      background: var(--text);
+      color: #fff;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .problem .section-label {
+      color: var(--accent);
+    }
+
+    .problem .section-title {
+      color: #fff;
+    }
+
+    .problem .section-desc {
+      color: rgba(255,255,255,0.7);
+    }
+
+    .problem-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 24px;
+      margin-top: 60px;
+    }
+
+    .problem-card {
+      background: rgba(255,255,255,0.06);
+      backdrop-filter: blur(10px);
+      border: 1px solid rgba(255,255,255,0.1);
+      border-radius: var(--radius);
+      padding: 36px;
+      transition: transform var(--transition);
+    }
+
+    .problem-card:hover {
+      transform: translateY(-4px);
+    }
+
+    .problem-card svg {
+      width: 48px;
+      height: 48px;
+      margin-bottom: 20px;
+    }
+
+    .problem-card h3 {
+      font-size: 1.2rem;
+      margin-bottom: 12px;
+      color: #fff;
+    }
+
+    .problem-card p {
+      color: rgba(255,255,255,0.65);
+      font-size: 0.95rem;
+      line-height: 1.7;
+    }
+
+    .problem-stat-big {
+      font-family: 'DM Sans', sans-serif;
+      font-size: 2.5rem;
+      font-weight: 800;
+      color: var(--accent);
+      margin-bottom: 8px;
+    }
+
+    /* ── EVOLUTION ── */
+    .evolution-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 60px;
+      align-items: center;
+      margin-top: 60px;
+    }
+
+    .evolution-visual {
+      position: relative;
+    }
+
+    .evolution-visual img {
+      border-radius: var(--radius);
+      box-shadow: var(--shadow-lg);
+      width: 100%;
+      height: 400px;
+      object-fit: cover;
+    }
+
+    .evolution-timeline {
+      display: flex;
+      flex-direction: column;
+      gap: 32px;
+    }
+
+    .timeline-item {
+      display: flex;
+      gap: 20px;
+      align-items: flex-start;
+    }
+
+    .timeline-dot {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, var(--primary), var(--accent));
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      color: #fff;
+      font-weight: 700;
+      font-size: 0.85rem;
+    }
+
+    .timeline-content h3 {
+      font-size: 1.1rem;
+      margin-bottom: 6px;
+    }
+
+    .timeline-content p {
+      color: var(--muted);
+      font-size: 0.95rem;
+    }
+
+    /* ── PROGRAMS ── */
+    .programs {
+      background: linear-gradient(180deg, #F5F3EF 0%, var(--bg) 100%);
+    }
+
+    .programs-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 28px;
+      margin-top: 60px;
+    }
+
+    .program-card {
+      background: var(--surface);
+      border-radius: var(--radius);
+      overflow: hidden;
+      box-shadow: var(--shadow);
+      transition: transform var(--transition), box-shadow var(--transition);
+    }
+
+    .program-card:hover {
+      transform: translateY(-6px);
+      box-shadow: var(--shadow-lg);
+    }
+
+    .program-card-img {
+      width: 100%;
+      height: 220px;
+      object-fit: cover;
+    }
+
+    .program-card-body {
+      padding: 28px;
+    }
+
+    .program-card-tag {
+      display: inline-block;
+      background: rgba(232,112,58,0.1);
+      color: var(--primary);
+      font-size: 0.75rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      padding: 4px 12px;
+      border-radius: 50px;
+      margin-bottom: 12px;
+    }
+
+    .program-card h3 {
+      font-size: 1.3rem;
+      margin-bottom: 10px;
+    }
+
+    .program-card p {
+      color: var(--muted);
+      font-size: 0.95rem;
+      line-height: 1.7;
+    }
+
+    /* ── IMPACT ── */
+    .impact {
+      background: var(--secondary);
+      color: #fff;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .impact .section-label {
+      color: var(--accent);
+    }
+
+    .impact .section-title {
+      color: #fff;
+    }
+
+    .impact .section-desc {
+      color: rgba(255,255,255,0.75);
+    }
+
+    .impact-stats {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 24px;
+      margin-top: 60px;
+    }
+
+    .impact-stat-card {
+      background: rgba(255,255,255,0.1);
+      backdrop-filter: blur(10px);
+      border: 1px solid rgba(255,255,255,0.15);
+      border-radius: var(--radius);
+      padding: 36px 24px;
+      text-align: center;
+      transition: transform var(--transition);
+    }
+
+    .impact-stat-card:hover {
+      transform: translateY(-4px);
+    }
+
+    .impact-stat-card svg {
+      width: 44px;
+      height: 44px;
+      margin: 0 auto 16px;
+    }
+
+    .impact-num {
+      font-family: 'DM Sans', sans-serif;
+      font-size: 2.5rem;
+      font-weight: 800;
+      color: var(--accent);
+      margin-bottom: 4px;
+    }
+
+    .impact-label {
+      font-size: 0.9rem;
+      color: rgba(255,255,255,0.8);
+    }
+
+    .impact-goals {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 24px;
+      margin-top: 48px;
+    }
+
+    .impact-goal {
+      background: rgba(255,255,255,0.08);
+      border-radius: var(--radius-sm);
+      padding: 24px;
+    }
+
+    .impact-goal h4 {
+      color: var(--accent);
+      margin-bottom: 8px;
+      font-size: 1rem;
+    }
+
+    .impact-goal p {
+      color: rgba(255,255,255,0.7);
+      font-size: 0.9rem;
+    }
+
+    /* ── FOUNDER ── */
+    .founder-grid {
+      display: grid;
+      grid-template-columns: 1fr 1.5fr;
+      gap: 60px;
+      align-items: center;
+      margin-top: 60px;
+    }
+
+    .founder-photo {
+      position: relative;
+    }
+
+    .founder-photo-wrapper {
+      width: 280px;
+      height: 280px;
+      border-radius: 50%;
+      overflow: hidden;
+      margin: 0 auto;
+      border: 4px solid var(--primary);
+      box-shadow: 0 0 0 12px rgba(232,112,58,0.1);
+    }
+
+    .founder-photo-wrapper img,
+    .founder-photo-wrapper svg {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .founder-info h3 {
+      font-size: 1.8rem;
+      margin-bottom: 8px;
+    }
+
+    .founder-role {
+      color: var(--primary);
+      font-weight: 600;
+      margin-bottom: 20px;
+      font-size: 1rem;
+    }
+
+    .founder-info p {
+      color: var(--muted);
+      font-size: 1.05rem;
+      line-height: 1.8;
+      margin-bottom: 16px;
+    }
+
+    .founder-quote {
+      background: linear-gradient(135deg, rgba(232,112,58,0.08), rgba(244,185,66,0.08));
+      border-left: 4px solid var(--primary);
+      padding: 20px 24px;
+      border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
+      margin-top: 24px;
+    }
+
+    .founder-quote p {
+      font-style: italic;
+      color: var(--text);
+      font-size: 1.05rem;
+    }
+
+    /* ── CONTACT ── */
+    .contact {
+      background: linear-gradient(180deg, var(--bg) 0%, #F5F3EF 100%);
+    }
+
+    .contact-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 60px;
+      margin-top: 60px;
+    }
+
+    .contact-info-card {
+      background: var(--surface);
+      border-radius: var(--radius);
+      padding: 40px;
+      box-shadow: var(--shadow);
+    }
+
+    .contact-method {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      margin-bottom: 24px;
+    }
+
+    .contact-icon {
+      width: 48px;
+      height: 48px;
+      border-radius: 50%;
+      background: rgba(232,112,58,0.1);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+
+    .contact-icon svg {
+      width: 22px;
+      height: 22px;
+    }
+
+    .contact-method-label {
+      font-size: 0.85rem;
+      color: var(--muted);
+    }
+
+    .contact-method-value {
+      font-weight: 600;
+      color: var(--text);
+    }
+
+    .contact-form {
+      background: var(--surface);
+      border-radius: var(--radius);
+      padding: 40px;
+      box-shadow: var(--shadow);
+    }
+
+    .form-group {
+      margin-bottom: 20px;
+    }
+
+    .form-group label {
+      display: block;
+      font-weight: 600;
+      font-size: 0.9rem;
+      margin-bottom: 8px;
+      color: var(--text);
+    }
+
+    .form-group input,
+    .form-group textarea {
+      width: 100%;
+      padding: 14px 18px;
+      border: 2px solid #E8E5E0;
+      border-radius: var(--radius-sm);
+      font-family: inherit;
+      font-size: 1rem;
+      transition: border-color var(--transition);
+      background: var(--bg);
+      color: var(--text);
+    }
+
+    .form-group input:focus,
+    .form-group textarea:focus {
+      outline: none;
+      border-color: var(--primary);
+    }
+
+    .form-group textarea {
+      resize: vertical;
+      min-height: 120px;
+    }
+
+    .form-error {
+      color: var(--donate);
+      font-size: 0.8rem;
+      margin-top: 4px;
+      display: none;
+    }
+
+    /* ── DONATE ── */
+    .donate {
+      background: linear-gradient(135deg, #FFF5F5 0%, #FFF7F0 50%, #FFFBE6 100%);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .donate-content {
+      text-align: center;
+      max-width: 640px;
+      margin: 0 auto;
+    }
+
+    .donate .section-label {
+      color: var(--donate);
+    }
+
+    .donate-amounts {
+      display: flex;
+      justify-content: center;
+      gap: 16px;
+      margin: 40px 0 24px;
+      flex-wrap: wrap;
+    }
+
+    .donate-amount {
+      padding: 14px 28px;
+      border: 2px solid #E8E5E0;
+      border-radius: var(--radius-sm);
+      background: var(--surface);
+      font-size: 1.1rem;
+      font-weight: 700;
+      font-family: inherit;
+      cursor: pointer;
+      transition: all var(--transition);
+      color: var(--text);
+    }
+
+    .donate-amount:hover,
+    .donate-amount.active {
+      border-color: var(--donate);
+      background: var(--donate);
+      color: #fff;
+    }
+
+    .donate-amount:focus-visible {
+      outline: 3px solid var(--donate);
+      outline-offset: 3px;
+    }
+
+    .donate-custom {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      justify-content: center;
+      margin-bottom: 32px;
+    }
+
+    .donate-custom input {
+      width: 140px;
+      padding: 14px 18px;
+      border: 2px solid #E8E5E0;
+      border-radius: var(--radius-sm);
+      font-size: 1.1rem;
+      font-weight: 600;
+      text-align: center;
+      font-family: inherit;
+      background: var(--surface);
+      color: var(--text);
+    }
+
+    .donate-custom input:focus {
+      outline: none;
+      border-color: var(--donate);
+    }
+
+    .donate-custom span {
+      font-size: 1.1rem;
+      font-weight: 600;
+      color: var(--muted);
+    }
+
+    .btn-donate-lg {
+      background: var(--donate);
+      color: #fff;
+      padding: 18px 48px;
+      font-size: 1.15rem;
+      border-radius: 50px;
+      border: none;
+      font-weight: 700;
+      cursor: pointer;
+      font-family: inherit;
+      transition: transform var(--transition), box-shadow var(--transition);
+    }
+
+    .btn-donate-lg:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 32px rgba(217,78,78,0.35);
+    }
+
+    .btn-donate-lg:focus-visible {
+      outline: 3px solid var(--donate);
+      outline-offset: 3px;
+    }
+
+    /* ── FOOTER ── */
+    .footer {
+      background: var(--text);
+      color: rgba(255,255,255,0.7);
+      padding: 60px 0 30px;
+    }
+
+    .footer-inner {
+      display: grid;
+      grid-template-columns: 2fr 1fr 1fr;
+      gap: 40px;
+      margin-bottom: 40px;
+    }
+
+    .footer-brand {
+      font-family: 'DM Sans', sans-serif;
+      font-weight: 800;
+      font-size: 1.4rem;
+      color: #fff;
+      margin-bottom: 12px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .footer-brand svg {
+      width: 32px;
+      height: 32px;
+    }
+
+    .footer-desc {
+      font-size: 0.9rem;
+      line-height: 1.7;
+      max-width: 360px;
+    }
+
+    .footer h4 {
+      color: #fff;
+      font-size: 0.95rem;
+      margin-bottom: 16px;
+      font-weight: 700;
+    }
+
+    .footer-links {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .footer-links a {
+      font-size: 0.9rem;
+      transition: color var(--transition);
+    }
+
+    .footer-links a:hover {
+      color: var(--primary);
+    }
+
+    .footer-bottom {
+      border-top: 1px solid rgba(255,255,255,0.1);
+      padding-top: 24px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 0.85rem;
+    }
+
+    /* ── MODAL ── */
+    .modal-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.5);
+      backdrop-filter: blur(6px);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 2000;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity var(--transition);
+    }
+
+    .modal-overlay.active {
+      opacity: 1;
+      pointer-events: all;
+    }
+
+    .modal {
+      background: var(--surface);
+      border-radius: var(--radius);
+      padding: 48px;
+      max-width: 440px;
+      width: 90%;
+      text-align: center;
+      transform: translateY(20px);
+      transition: transform var(--transition);
+    }
+
+    .modal-overlay.active .modal {
+      transform: translateY(0);
+    }
+
+    .modal svg {
+      width: 64px;
+      height: 64px;
+      margin: 0 auto 20px;
+    }
+
+    .modal h3 {
+      font-size: 1.5rem;
+      margin-bottom: 12px;
+    }
+
+    .modal p {
+      color: var(--muted);
+      margin-bottom: 24px;
+    }
+
+    .modal .btn {
+      margin: 0 auto;
+    }
+
+    /* ── TOAST ── */
+    .toast {
+      position: fixed;
+      bottom: 32px;
+      right: 32px;
+      background: var(--secondary);
+      color: #fff;
+      padding: 16px 28px;
+      border-radius: var(--radius-sm);
+      font-weight: 600;
+      box-shadow: var(--shadow-lg);
+      z-index: 3000;
+      transform: translateY(120%);
+      transition: transform var(--transition);
+    }
+
+    .toast.show {
+      transform: translateY(0);
+    }
+
+    /* ── ANIMATIONS ── */
+    [data-animate] {
+      opacity: 0;
+      transform: translateY(30px);
+      transition: opacity 0.6s ease, transform 0.6s ease;
+    }
+
+    [data-animate].animate-in {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    [data-animate="slide-left"] {
+      transform: translateX(-30px);
+    }
+
+    [data-animate="slide-left"].animate-in {
+      transform: translateX(0);
+    }
+
+    [data-animate="slide-right"] {
+      transform: translateX(30px);
+    }
+
+    [data-animate="slide-right"].animate-in {
+      transform: translateX(0);
+    }
+
+    [data-animate="scale"] {
+      transform: scale(0.95);
+    }
+
+    [data-animate="scale"].animate-in {
+      transform: scale(1);
+    }
+
+    /* ── DIVIDER SVG ── */
+    .section-divider {
+      width: 100%;
+      line-height: 0;
+    }
+
+    .section-divider svg {
+      width: 100%;
+      height: auto;
+    }
+
+    /* ── RESPONSIVE ── */
+    @media (max-width: 968px) {
+      .hero-content {
+        grid-template-columns: 1fr;
+        text-align: center;
+        gap: 40px;
+      }
+
+      .hero-text {
+        max-width: 100%;
+      }
+
+      .hero-btns {
+        justify-content: center;
+      }
+
+      .hero-stats {
+        justify-content: center;
+      }
+
+      .hero-visual {
+        order: -1;
+      }
+
+      .hero-illustration {
+        max-width: 320px;
+      }
+
+      .problem-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .evolution-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .programs-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .impact-stats {
+        grid-template-columns: repeat(2, 1fr);
+      }
+
+      .impact-goals {
+        grid-template-columns: 1fr;
+      }
+
+      .founder-grid {
+        grid-template-columns: 1fr;
+        text-align: center;
+      }
+
+      .contact-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .footer-inner {
+        grid-template-columns: 1fr;
+      }
+
+      .footer-bottom {
+        flex-direction: column;
+        gap: 12px;
+        text-align: center;
+      }
+    }
+
+    @media (max-width: 640px) {
+      .nav-links {
+        display: none;
+        position: absolute;
+        top: 72px;
+        left: 0;
+        right: 0;
+        background: var(--glass-bg);
+        backdrop-filter: blur(16px);
+        flex-direction: column;
+        padding: 24px;
+        gap: 20px;
+        border-bottom: 1px solid var(--glass-border);
+      }
+
+      .nav-links.open {
+        display: flex;
+      }
+
+      .mobile-toggle {
+        display: block;
+      }
+
+      .hero h1 {
+        font-size: 2rem;
+      }
+
+      .hero-stats {
+        flex-direction: column;
+        gap: 16px;
+        align-items: center;
+      }
+
+      .impact-stats {
+        grid-template-columns: 1fr;
+      }
+
+      .donate-amounts {
+        flex-direction: column;
+        align-items: center;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- NAV -->
+  <nav class="nav" role="navigation" aria-label="Main navigation">
+    <div class="nav-inner">
+      <a href="#home" class="nav-logo" aria-label="TableSpark Home">
+        <svg viewBox="0 0 36 36" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <circle cx="18" cy="18" r="16" fill="#E8703A" opacity="0.15"/>
+          <path d="M10 22C10 22 12 14 18 14C24 14 26 22 26 22" stroke="#E8703A" stroke-width="2.5" stroke-linecap="round"/>
+          <path d="M18 8V14" stroke="#F4B942" stroke-width="2.5" stroke-linecap="round"/>
+          <path d="M14 10L16 14" stroke="#F4B942" stroke-width="2" stroke-linecap="round"/>
+          <path d="M22 10L20 14" stroke="#F4B942" stroke-width="2" stroke-linecap="round"/>
+          <line x1="8" y1="22" x2="28" y2="22" stroke="#E8703A" stroke-width="2.5" stroke-linecap="round"/>
+          <path d="M12 22V26C12 27.1 12.9 28 14 28H22C23.1 28 24 27.1 24 26V22" stroke="#E8703A" stroke-width="2" stroke-linecap="round"/>
+        </svg>
+        TableSpark
+      </a>
+      <ul class="nav-links" id="navLinks">
+        <li><a href="#home">Home</a></li>
+        <li><a href="#about">About Us</a></li>
+        <li><a href="#contact">Contact</a></li>
+        <li><a href="#donate" class="nav-donate">Donate</a></li>
+      </ul>
+      <button class="mobile-toggle" id="mobileToggle" aria-label="Toggle navigation menu" aria-expanded="false">
+        <span></span>
+        <span></span>
+        <span></span>
+      </button>
+    </div>
+  </nav>
+
+  <!-- HERO -->
+  <section class="hero" id="home">
+    <div class="hero-bg">
+      <img src="assets/hero-bg.jpg" alt="" loading="lazy">
+    </div>
+    <div class="container">
+      <div class="hero-content">
+        <div class="hero-text" data-animate>
+          <div class="hero-badge">
+            <svg viewBox="0 0 16 16" fill="none"><circle cx="8" cy="8" r="4" fill="#E8703A"/></svg>
+            Rescuing meals. Feeding communities.
+          </div>
+          <h1>Every Meal Rescued Is a <span>Hunger Erased</span></h1>
+          <p class="hero-desc">We intercept surplus food from restaurants, grocery stores, and local farms before it's wasted — and deliver it same-day to shelters and families who need it most.</p>
+          <div class="hero-btns">
+            <a href="#programs" class="btn btn-primary">Our Programs</a>
+            <a href="#donate" class="btn btn-donate">Donate Now</a>
+          </div>
+          <div class="hero-stats">
+            <div class="hero-stat">
+              <div class="hero-stat-num">42K+</div>
+              <div class="hero-stat-label">Meals Rescued</div>
+            </div>
+            <div class="hero-stat">
+              <div class="hero-stat-num">180+</div>
+              <div class="hero-stat-label">Partner Donors</div>
+            </div>
+            <div class="hero-stat">
+              <div class="hero-stat-num">600+</div>
+              <div class="hero-stat-label">Active Volunteers</div>
+            </div>
+          </div>
+        </div>
+        <div class="hero-visual" data-animate="slide-right">
+          <!-- Hero SVG Illustration: a stylized plate with food items and a spark/lightning motif, warm orange and teal palette, geometric and modern -->
+          <svg class="hero-illustration" viewBox="0 0 480 400" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <defs>
+              <linearGradient id="plateGrad" x1="0" y1="0" x2="1" y2="1">
+                <stop offset="0%" stop-color="#E8703A" stop-opacity="0.15"/>
+                <stop offset="100%" stop-color="#F4B942" stop-opacity="0.15"/>
+              </linearGradient>
+              <linearGradient id="sparkGrad" x1="0" y1="0" x2="0" y2="1">
+                <stop offset="0%" stop-color="#F4B942"/>
+                <stop offset="100%" stop-color="#E8703A"/>
+              </linearGradient>
+            </defs>
+            <!-- Background circle -->
+            <circle cx="240" cy="200" r="170" fill="url(#plateGrad)"/>
+            <!-- Plate -->
+            <ellipse cx="240" cy="240" rx="140" ry="40" fill="#E8703A" opacity="0.12"/>
+            <ellipse cx="240" cy="232" rx="120" ry="60" fill="none" stroke="#E8703A" stroke-width="3" opacity="0.4"/>
+            <ellipse cx="240" cy="226" rx="95" ry="46" fill="#FAFAF7" stroke="#E8703A" stroke-width="2"/>
+            <!-- Food items on plate -->
+            <circle cx="215" cy="215" r="18" fill="#3A7D6E" opacity="0.7"/>
+            <circle cx="255" cy="210" r="14" fill="#E8703A" opacity="0.6"/>
+            <circle cx="235" cy="200" r="12" fill="#F4B942" opacity="0.7"/>
+            <rect x="220" y="228" width="40" height="8" rx="4" fill="#3A7D6E" opacity="0.3"/>
+            <!-- Spark / lightning bolt -->
+            <path d="M240 60L225 140H250L220 200L280 120H252L275 60Z" fill="url(#sparkGrad)" opacity="0.8"/>
+            <!-- Small sparkles -->
+            <circle cx="310" cy="100" r="4" fill="#F4B942"/>
+            <circle cx="170" cy="120" r="3" fill="#E8703A"/>
+            <circle cx="330" cy="170" r="3" fill="#3A7D6E"/>
+            <circle cx="150" cy="190" r="4" fill="#F4B942" opacity="0.6"/>
+            <circle cx="340" cy="250" r="3" fill="#E8703A" opacity="0.5"/>
+            <!-- Arrow paths representing food flow -->
+            <path d="M100 160C120 140 140 150 160 160" stroke="#3A7D6E" stroke-width="2" stroke-linecap="round" fill="none" opacity="0.4"/>
+            <path d="M320 160C340 140 360 150 380 160" stroke="#3A7D6E" stroke-width="2" stroke-linecap="round" fill="none" opacity="0.4"/>
+            <path d="M140 300C170 280 200 290 230 280" stroke="#E8703A" stroke-width="2" stroke-linecap="round" fill="none" opacity="0.3"/>
+            <path d="M250 280C280 290 310 280 340 300" stroke="#E8703A" stroke-width="2" stroke-linecap="round" fill="none" opacity="0.3"/>
+            <!-- Heart -->
+            <path d="M240 310 C240 310 220 295 220 282 C220 274 228 270 240 278 C252 270 260 274 260 282 C260 295 240 310 240 310Z" fill="#D94E4E" opacity="0.7"/>
+          </svg>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- WAVE DIVIDER -->
+  <div class="section-divider">
+    <svg viewBox="0 0 1440 60" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
+      <path d="M0 60V20C240 50 480 0 720 20C960 40 1200 10 1440 30V60Z" fill="#2D2A26"/>
+    </svg>
+  </div>
+
+  <!-- PROBLEM -->
+  <section class="section problem" id="problem">
+    <div class="container">
+      <div data-animate>
+        <div class="section-label">
+          <svg width="18" height="18" viewBox="0 0 18 18" fill="none"><circle cx="9" cy="9" r="8" stroke="#F4B942" stroke-width="2"/><line x1="9" y1="5" x2="9" y2="10" stroke="#F4B942" stroke-width="2" stroke-linecap="round"/><circle cx="9" cy="13" r="1" fill="#F4B942"/></svg>
+          The Problem
+        </div>
+        <h2 class="section-title">A City That Wastes Food While People Go Hungry</h2>
+        <p class="section-desc">Every day, tons of perfectly good food are thrown away by restaurants and grocery stores — while thousands of families skip meals. The disconnect isn't about scarcity. It's about logistics.</p>
+      </div>
+      <div class="problem-grid">
+        <div class="problem-card" data-animate>
+          <svg viewBox="0 0 48 48" fill="none">
+            <rect x="6" y="20" width="36" height="22" rx="4" stroke="#F4B942" stroke-width="2.5"/>
+            <path d="M6 28H42" stroke="#F4B942" stroke-width="2" opacity="0.5"/>
+            <path d="M16 12L24 6L32 12" stroke="#E8703A" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+            <line x1="24" y1="6" x2="24" y2="20" stroke="#E8703A" stroke-width="2" stroke-dasharray="3 3"/>
+          </svg>
+          <div class="problem-stat-big">35%</div>
+          <h3>Food Wasted</h3>
+          <p>Over a third of all food produced in the U.S. is never eaten — tossed at restaurants, warehouses, and grocery shelves while still perfectly edible.</p>
+        </div>
+        <div class="problem-card" data-animate>
+          <svg viewBox="0 0 48 48" fill="none">
+            <circle cx="24" cy="18" r="8" stroke="#F4B942" stroke-width="2.5"/>
+            <path d="M10 40C10 32 16 28 24 28C32 28 38 32 38 40" stroke="#F4B942" stroke-width="2.5" stroke-linecap="round"/>
+            <line x1="18" y1="16" x2="20" y2="20" stroke="#E8703A" stroke-width="2" stroke-linecap="round"/>
+            <line x1="28" y1="20" x2="30" y2="16" stroke="#E8703A" stroke-width="2" stroke-linecap="round"/>
+          </svg>
+          <div class="problem-stat-big">1 in 8</div>
+          <h3>Families Struggle</h3>
+          <p>One in eight households in our region faces food insecurity — parents skipping meals so their children can eat, seniors choosing between food and medication.</p>
+        </div>
+        <div class="problem-card" data-animate>
+          <svg viewBox="0 0 48 48" fill="none">
+            <circle cx="24" cy="24" r="18" stroke="#F4B942" stroke-width="2.5" stroke-dasharray="4 4"/>
+            <path d="M24 12V24L32 28" stroke="#E8703A" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+          <div class="problem-stat-big">4 hrs</div>
+          <h3>The Freshness Window</h3>
+          <p>Surplus food has a narrow rescue window. Without a fast, coordinated pickup system, edible meals become landfill waste within hours of closing time.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- DIVIDER -->
+  <div class="section-divider">
+    <svg viewBox="0 0 1440 60" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
+      <path d="M0 0V40C360 10 720 50 1080 30C1260 20 1380 35 1440 25V0Z" fill="#2D2A26"/>
+    </svg>
+  </div>
+
+  <!-- EVOLUTION -->
+  <section class="section" id="evolution">
+    <div class="container">
+      <div data-animate>
+        <div class="section-label">
+          <svg width="18" height="18" viewBox="0 0 18 18" fill="none"><path d="M3 15L9 3L15 15" stroke="#E8703A" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          Our Story
+        </div>
+        <h2 class="section-title">From Campus Idea to Community Lifeline</h2>
+        <p class="section-desc">What started as a computer science project to reduce campus dining hall waste became a city-wide food rescue network powered by technology and heart.</p>
+      </div>
+      <div class="evolution-grid">
+        <div class="evolution-visual" data-animate="slide-left">
+          <img src="assets/impact-bg.jpg" alt="Organized food bank warehouse showing shelves of rescued food" loading="lazy">
+        </div>
+        <div class="evolution-timeline" data-animate="slide-right">
+          <div class="timeline-item">
+            <div class="timeline-dot">1</div>
+            <div class="timeline-content">
+              <h3>The Campus Spark</h3>
+              <p>It began when our founder noticed hundreds of untouched meals discarded nightly from the university cafeteria — and built a prototype app to connect that surplus with a nearby shelter.</p>
+            </div>
+          </div>
+          <div class="timeline-item">
+            <div class="timeline-dot">2</div>
+            <div class="timeline-content">
+              <h3>The First Rescue Run</h3>
+              <p>Within two weeks, 15 student volunteers were picking up surplus food from three campus dining halls and delivering 200+ meals weekly to two local shelters.</p>
+            </div>
+          </div>
+          <div class="timeline-item">
+            <div class="timeline-dot">3</div>
+            <div class="timeline-content">
+              <h3>Going City-Wide</h3>
+              <p>Restaurants and grocery stores noticed. Within six months, the network expanded to 50+ food donors across the city, and the mobile app matched pickups in real time.</p>
+            </div>
+          </div>
+          <div class="timeline-item">
+            <div class="timeline-dot">4</div>
+            <div class="timeline-content">
+              <h3>TableSpark Is Born</h3>
+              <p>The project incorporated as TableSpark — a nonprofit scaling its technology to serve every neighborhood, partnering with farms for fresh produce, and running weekly community meal drives.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- PROGRAMS -->
+  <section class="section programs" id="programs">
+    <div class="container">
+      <div data-animate>
+        <div class="section-label">
+          <svg width="18" height="18" viewBox="0 0 18 18" fill="none"><rect x="2" y="2" width="6" height="6" rx="1.5" stroke="#E8703A" stroke-width="2"/><rect x="10" y="2" width="6" height="6" rx="1.5" stroke="#E8703A" stroke-width="2"/><rect x="2" y="10" width="6" height="6" rx="1.5" stroke="#E8703A" stroke-width="2"/><rect x="10" y="10" width="6" height="6" rx="1.5" stroke="#E8703A" stroke-width="2"/></svg>
+          Programs
+        </div>
+        <h2 class="section-title">How We Turn Surplus Into Sustenance</h2>
+        <p class="section-desc">Four interconnected programs that form a complete food rescue ecosystem — from alert to doorstep.</p>
+      </div>
+      <div class="programs-grid">
+        <div class="program-card" data-animate>
+          <img class="program-card-img" src="assets/program1.jpg" alt="Volunteers loading rescued food into delivery vehicles" loading="lazy">
+          <div class="program-card-body">
+            <div class="program-card-tag">Real-Time Rescue</div>
+            <h3>SparkRoute</h3>
+            <p>Our smart-routing engine sends instant alerts when restaurants, grocery stores, or caterers have surplus food. Volunteers claim pickups through the app and deliver within the 4-hour freshness window using optimized routes.</p>
+          </div>
+        </div>
+        <div class="program-card" data-animate>
+          <img class="program-card-img" src="assets/program2.jpg" alt="Boxes of fresh organic produce from local farm partners" loading="lazy">
+          <div class="program-card-body">
+            <div class="program-card-tag">Farm to Family</div>
+            <h3>SeedBox</h3>
+            <p>Every week, partner farms donate imperfect but nutritious produce that won't make retail shelves. We pack curated SeedBoxes and distribute them directly to low-income families at neighborhood hubs.</p>
+          </div>
+        </div>
+        <div class="program-card" data-animate>
+          <img class="program-card-img" src="assets/program3.jpg" alt="Community members cooking together at a pop-up kitchen event" loading="lazy">
+          <div class="program-card-body">
+            <div class="program-card-tag">Community Kitchens</div>
+            <h3>RiseKitchen</h3>
+            <p>Pop-up cooking events where volunteer chefs transform rescued ingredients into nutritious meals. Held weekly at community centers, these gatherings also teach participants how to cook affordable, low-waste meals at home.</p>
+          </div>
+        </div>
+        <div class="program-card" data-animate>
+          <img class="program-card-img" src="assets/program4.jpg" alt="Mobile app interface showing food donor and volunteer matching" loading="lazy">
+          <div class="program-card-body">
+            <div class="program-card-tag">Tech Platform</div>
+            <h3>CrestConnect</h3>
+            <p>The backbone of our operation — a mobile app that instantly matches food donors with available volunteer drivers. Real-time tracking, photo verification, and impact logging ensure every meal is accounted for.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- IMPACT -->
+  <section class="section impact" id="impact">
+    <div class="container">
+      <div data-animate>
+        <div class="section-label">
+          <svg width="18" height="18" viewBox="0 0 18 18" fill="none"><path d="M9 2L11.5 7H16L12.5 10.5L14 16L9 12.5L4 16L5.5 10.5L2 7H6.5L9 2Z" stroke="#F4B942" stroke-width="2" stroke-linejoin="round"/></svg>
+          Impact
+        </div>
+        <h2 class="section-title">The Numbers Behind the Movement</h2>
+        <p class="section-desc">Every metric here represents real meals reaching real people — tracked and verified through our technology platform.</p>
+      </div>
+      <div class="impact-stats">
+        <div class="impact-stat-card" data-animate>
+          <svg viewBox="0 0 44 44" fill="none">
+            <path d="M22 6C22 6 10 14 10 24C10 30.6 15.4 36 22 36C28.6 36 34 30.6 34 24C34 14 22 6 22 6Z" stroke="#F4B942" stroke-width="2.5" fill="#F4B942" fill-opacity="0.2"/>
+            <path d="M22 20V28" stroke="#F4B942" stroke-width="2" stroke-linecap="round"/>
+            <circle cx="22" cy="32" r="1.5" fill="#F4B942"/>
+          </svg>
+          <div class="impact-num">42,000+</div>
+          <div class="impact-label">Meals Rescued & Delivered</div>
+        </div>
+        <div class="impact-stat-card" data-animate>
+          <svg viewBox="0 0 44 44" fill="none">
+            <rect x="6" y="14" width="32" height="22" rx="3" stroke="#F4B942" stroke-width="2.5"/>
+            <path d="M6 20H38" stroke="#F4B942" stroke-width="2"/>
+            <circle cx="22" cy="8" r="4" stroke="#F4B942" stroke-width="2"/>
+          </svg>
+          <div class="impact-num">2,800+</div>
+          <div class="impact-label">Families Served Monthly</div>
+        </div>
+        <div class="impact-stat-card" data-animate>
+          <svg viewBox="0 0 44 44" fill="none">
+            <path d="M10 34L18 22L24 28L34 12" stroke="#F4B942" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+            <circle cx="34" cy="12" r="3" fill="#F4B942"/>
+          </svg>
+          <div class="impact-num">56 tons</div>
+          <div class="impact-label">Food Diverted from Landfills</div>
+        </div>
+        <div class="impact-stat-card" data-animate>
+          <svg viewBox="0 0 44 44" fill="none">
+            <circle cx="16" cy="16" r="6" stroke="#F4B942" stroke-width="2.5"/>
+            <circle cx="28" cy="16" r="6" stroke="#F4B942" stroke-width="2.5"/>
+            <path d="M8 36C8 30 12 26 16 26" stroke="#F4B942" stroke-width="2" stroke-linecap="round"/>
+            <path d="M28 26C32 26 36 30 36 36" stroke="#F4B942" stroke-width="2" stroke-linecap="round"/>
+          </svg>
+          <div class="impact-num">180+</div>
+          <div class="impact-label">Restaurant & Store Partners</div>
+        </div>
+      </div>
+      <div class="impact-goals" data-animate>
+        <div class="impact-goal">
+          <h4>2026 Goal</h4>
+          <p>Rescue 100,000 meals annually and expand SeedBox distribution to 15 neighborhoods across the metro area.</p>
+        </div>
+        <div class="impact-goal">
+          <h4>Tech Expansion</h4>
+          <p>Launch CrestConnect v2 with AI-powered surplus prediction so donors can schedule pickups before food even becomes surplus.</p>
+        </div>
+        <div class="impact-goal">
+          <h4>Zero-Waste Districts</h4>
+          <p>Partner with city government to pilot three "zero food waste" commercial districts where every restaurant participates in rescue.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ABOUT / FOUNDER -->
+  <section class="section" id="about">
+    <div class="container">
+      <div data-animate>
+        <div class="section-label">
+          <svg width="18" height="18" viewBox="0 0 18 18" fill="none"><circle cx="9" cy="7" r="4" stroke="#E8703A" stroke-width="2"/><path d="M3 17C3 13.5 5.7 11 9 11C12.3 11 15 13.5 15 17" stroke="#E8703A" stroke-width="2" stroke-linecap="round"/></svg>
+          About Us
+        </div>
+        <h2 class="section-title">Meet the Founder</h2>
+      </div>
+      <div class="founder-grid" id="founder">
+        <div class="founder-photo" data-animate="slide-left">
+          <div class="founder-photo-wrapper">
+            <!-- Default inline SVG avatar, JS will swap if assets/founder.png exists -->
+            <svg id="founderImg" viewBox="0 0 280 280" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <rect width="280" height="280" fill="#F5F3EF"/>
+              <circle cx="140" cy="105" r="45" fill="#E8703A" opacity="0.2" stroke="#E8703A" stroke-width="3"/>
+              <path d="M70 250C70 210 100 185 140 185C180 185 210 210 210 250" fill="#E8703A" opacity="0.15" stroke="#E8703A" stroke-width="3"/>
+              <circle cx="127" cy="98" r="4" fill="#E8703A"/>
+              <circle cx="153" cy="98" r="4" fill="#E8703A"/>
+              <path d="M130 115C130 115 135 122 140 122C145 122 150 115 150 115" stroke="#E8703A" stroke-width="2.5" stroke-linecap="round"/>
+            </svg>
+          </div>
+        </div>
+        <div class="founder-info" data-animate="slide-right">
+          <h3>test test</h3>
+          <div class="founder-role">Founder & Executive Director · Computer Science</div>
+          <p>As a computer science student, test test saw a massive disconnect: restaurants throwing away hundreds of meals each night while shelters just blocks away struggled to feed people. The answer wasn't more food — it was better logistics.</p>
+          <p>That insight led to a prototype app connecting surplus food with volunteer drivers, which grew into TableSpark — a full-scale nonprofit using technology to make food rescue fast, reliable, and scalable.</p>
+          <div class="founder-quote">
+            <p>"The food is already there. The people who need it are already there. We just had to build the bridge between them — and make it fast enough that nothing spoils along the way."</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CONTACT -->
+  <section class="section contact" id="contact">
+    <div class="container">
+      <div data-animate>
+        <div class="section-label">
+          <svg width="18" height="18" viewBox="0 0 18 18" fill="none"><rect x="2" y="4" width="14" height="10" rx="2" stroke="#E8703A" stroke-width="2"/><path d="M2 6L9 11L16 6" stroke="#E8703A" stroke-width="2" stroke-linecap="round"/></svg>
+          Contact
+        </div>
+        <h2 class="section-title">Get In Touch</h2>
+        <p class="section-desc">Want to partner with us, volunteer, or learn more? Drop us a line and we'll get back to you within 24 hours.</p>
+      </div>
+      <div class="contact-grid">
+        <div class="contact-info-card" data-animate="slide-left">
+          <h3 style="margin-bottom: 24px;">Reach Out</h3>
+          <div class="contact-method">
+            <div class="contact-icon">
+              <svg viewBox="0 0 22 22" fill="none"><rect x="2" y="4" width="18" height="14" rx="2" stroke="#E8703A" stroke-width="2"/><path d="M2 6L11 12L20 6" stroke="#E8703A" stroke-width="2" stroke-linecap="round"/></svg>
+            </div>
+            <div>
+              <div class="contact-method-label">Email</div>
+              <div class="contact-method-value">example@example.com</div>
+            </div>
+          </div>
+          <div style="margin-top: 32px; padding: 24px; background: linear-gradient(135deg, rgba(232,112,58,0.06), rgba(58,125,110,0.06)); border-radius: var(--radius-sm);">
+            <h4 style="margin-bottom: 8px; font-size: 1rem;">Volunteer With Us</h4>
+            <p style="color: var(--muted); font-size: 0.9rem; line-height: 1.7;">Have a car and a few hours a week? Our volunteer drivers are the heart of every rescue. Email us and we'll get you set up on the CrestConnect app.</p>
+          </div>
+          <div style="margin-top: 20px; padding: 24px; background: linear-gradient(135deg, rgba(58,125,110,0.06), rgba(244,185,66,0.06)); border-radius: var(--radius-sm);">
+            <h4 style="margin-bottom: 8px; font-size: 1rem;">Become a Food Partner</h4>
+            <p style="color: var(--muted); font-size: 0.9rem; line-height: 1.7;">Restaurants, grocery stores, caterers, and farms — we make donating surplus food easy. Schedule recurring pickups or post ad-hoc alerts through our platform.</p>
+          </div>
+        </div>
+        <form class="contact-form" id="contactForm" data-animate="slide-right" novalidate>
+          <h3 style="margin-bottom: 24px;">Send a Message</h3>
+          <div class="form-group">
+            <label for="contactName">Your Name *</label>
+            <input type="text" id="contactName" required placeholder="Jane Doe">
+            <div class="form-error" id="nameError">Please enter your name.</div>
+          </div>
+          <div class="form-group">
+            <label for="contactEmail">Your Email *</label>
+            <input type="email" id="contactEmail" required placeholder="jane@example.com">
+            <div class="form-error" id="emailError">Please enter a valid email address.</div>
+          </div>
+          <div class="form-group">
+            <label for="contactMessage">Message *</label>
+            <textarea id="contactMessage" required placeholder="Tell us how you'd like to help or what you'd like to know..."></textarea>
+            <div class="form-error" id="messageError">Please enter a message.</div>
+          </div>
+          <button type="submit" class="btn btn-primary" style="width:100%; justify-content:center;">Send Message</button>
+        </form>
+      </div>
+    </div>
+  </section>
+
+  <!-- DONATE -->
+  <section class="section donate" id="donate">
+    <div class="container">
+      <div class="donate-content" data-animate="scale">
+        <div class="section-label">
+          <!-- Donation SVG: a hand holding a heart with coins -->
+          <svg width="18" height="18" viewBox="0 0 18 18" fill="none"><path d="M9 3C9 3 5 5 5 9C5 12 7.2 14 9 15C10.8 14 13 12 13 9C13 5 9 3 9 3Z" stroke="#D94E4E" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          Support Our Mission
+        </div>
+        <h2 class="section-title">Every Dollar Rescues Meals</h2>
+        <p class="section-desc" style="margin: 0 auto 12px;">Your donation fuels volunteer gas reimbursements, cold storage for rescued food, SeedBox packing supplies, and the tech that keeps our rescue network running.</p>
+        <!-- Donation illustration SVG: coins flowing into a plate -->
+        <svg viewBox="0 0 200 80" fill="none" style="width: 160px; margin: 20px auto;" xmlns="http://www.w3.org/2000/svg">
+          <ellipse cx="100" cy="60" rx="60" ry="14" fill="#D94E4E" opacity="0.12"/>
+          <ellipse cx="100" cy="55" rx="48" ry="10" fill="none" stroke="#D94E4E" stroke-width="2" opacity="0.4"/>
+          <circle cx="70" cy="20" r="10" fill="#F4B942" opacity="0.6" stroke="#E8703A" stroke-width="1.5"/>
+          <text x="70" y="24" text-anchor="middle" font-size="10" font-weight="bold" fill="#E8703A">$</text>
+          <circle cx="100" cy="10" r="10" fill="#F4B942" opacity="0.7" stroke="#E8703A" stroke-width="1.5"/>
+          <text x="100" y="14" text-anchor="middle" font-size="10" font-weight="bold" fill="#E8703A">$</text>
+          <circle cx="130" cy="20" r="10" fill="#F4B942" opacity="0.6" stroke="#E8703A" stroke-width="1.5"/>
+          <text x="130" y="24" text-anchor="middle" font-size="10" font-weight="bold" fill="#E8703A">$</text>
+          <path d="M75 32L90 48" stroke="#E8703A" stroke-width="1.5" stroke-dasharray="3 3" opacity="0.4"/>
+          <path d="M100 22L100 44" stroke="#E8703A" stroke-width="1.5" stroke-dasharray="3 3" opacity="0.4"/>
+          <path d="M125 32L110 48" stroke="#E8703A" stroke-width="1.5" stroke-dasharray="3 3" opacity="0.4"/>
+        </svg>
+        <div class="donate-amounts">
+          <button class="donate-amount" data-amount="15">$15</button>
+          <button class="donate-amount active" data-amount="35">$35</button>
+          <button class="donate-amount" data-amount="75">$75</button>
+          <button class="donate-amount" data-amount="150">$150</button>
+        </div>
+        <div class="donate-custom">
+          <span>Or enter custom: $</span>
+          <input type="number" id="customAmount" min="1" placeholder="50">
+        </div>
+        <button class="btn-donate-lg" id="donateBtn">Continue to Donate</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer class="footer">
+    <div class="container">
+      <div class="footer-inner">
+        <div>
+          <div class="footer-brand">
+            <svg viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <circle cx="16" cy="16" r="14" fill="#E8703A" opacity="0.15"/>
+              <path d="M9 20C9 20 11 13 16 13C21 13 23 20 23 20" stroke="#E8703A" stroke-width="2" stroke-linecap="round"/>
+              <path d="M16 8V13" stroke="#F4B942" stroke-width="2" stroke-linecap="round"/>
+              <line x1="7" y1="20" x2="25" y2="20" stroke="#E8703A" stroke-width="2" stroke-linecap="round"/>
+            </svg>
+            TableSpark
+          </div>
+          <p class="footer-desc">Rescuing surplus meals and delivering them to communities in need. Every plate counts.</p>
+          <p class="footer-desc" style="margin-top: 12px;">example@example.com</p>
+        </div>
+        <div>
+          <h4>Navigate</h4>
+          <ul class="footer-links">
+            <li><a href="#home">Home</a></li>
+            <li><a href="#problem">The Problem</a></li>
+            <li><a href="#evolution">Our Story</a></li>
+            <li><a href="#programs">Programs</a></li>
+            <li><a href="#impact">Impact</a></li>
+          </ul>
+        </div>
+        <div>
+          <h4>Get Involved</h4>
+          <ul class="footer-links">
+            <li><a href="#about">About Us</a></li>
+            <li><a href="#contact">Contact</a></li>
+            <li><a href="#donate">Donate</a></li>
+          </ul>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <span>&copy; 2026 TableSpark. All rights reserved.</span>
+        <span>Built with purpose.</span>
+      </div>
+    </div>
+  </footer>
+
+  <!-- MODALS -->
+  <div class="modal-overlay" id="donateModal">
+    <div class="modal">
+      <svg viewBox="0 0 64 64" fill="none">
+        <circle cx="32" cy="32" r="28" fill="#3A7D6E" opacity="0.15"/>
+        <path d="M22 32L29 39L42 26" stroke="#3A7D6E" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+      <h3>Thank You!</h3>
+      <p id="donateModalText">Your generous donation of $35 will help us rescue meals and deliver them to families in need.</p>
+      <button class="btn btn-primary" onclick="closeDonateModal()">Close</button>
+    </div>
+  </div>
+
+  <!-- TOAST -->
+  <div class="toast" id="toast">Message sent! We'll be in touch soon.</div>
+
+  <script>
+    // ── Smooth Scroll Polyfill ──
+    (function() {
+      if ('scrollBehavior' in document.documentElement.style) return;
+      var originalScrollTo = window.scrollTo;
+      window.scrollTo = function(options) {
+        if (typeof options === 'object' && options.behavior === 'smooth') {
+          smoothScrollTo(options.top || 0);
+        } else {
+          originalScrollTo.apply(window, arguments);
+        }
+      };
+      function smoothScrollTo(targetY) {
+        var startY = window.pageYOffset;
+        var diff = targetY - startY;
+        var startTime = null;
+        var duration = 500;
+        function step(ts) {
+          if (!startTime) startTime = ts;
+          var elapsed = ts - startTime;
+          var progress = Math.min(elapsed / duration, 1);
+          var ease = progress < 0.5 ? 2 * progress * progress : -1 + (4 - 2 * progress) * progress;
+          window.scrollTo(0, startY + diff * ease);
+          if (elapsed < duration) requestAnimationFrame(step);
+        }
+        requestAnimationFrame(step);
+      }
+      document.querySelectorAll('a[href^="#"]').forEach(function(anchor) {
+        anchor.addEventListener('click', function(e) {
+          var target = document.querySelector(this.getAttribute('href'));
+          if (target) {
+            e.preventDefault();
+            var top = target.getBoundingClientRect().top + window.pageYOffset - 80;
+            smoothScrollTo(top);
+          }
+        });
+      });
+    })();
+
+    // ── Mobile Nav Toggle ──
+    var mobileToggle = document.getElementById('mobileToggle');
+    var navLinks = document.getElementById('navLinks');
+    mobileToggle.addEventListener('click', function() {
+      navLinks.classList.toggle('open');
+      var expanded = navLinks.classList.contains('open');
+      mobileToggle.setAttribute('aria-expanded', expanded);
+    });
+    navLinks.querySelectorAll('a').forEach(function(link) {
+      link.addEventListener('click', function() {
+        navLinks.classList.remove('open');
+        mobileToggle.setAttribute('aria-expanded', 'false');
+      });
+    });
+
+    // ── Intersection Observer Scroll Animations ──
+    (function() {
+      var elems = document.querySelectorAll('[data-animate]');
+      if (!('IntersectionObserver' in window)) {
+        elems.forEach(function(el) { el.classList.add('animate-in'); });
+        return;
+      }
+      var observer = new IntersectionObserver(function(entries) {
+        entries.forEach(function(entry) {
+          if (entry.isIntersecting) {
+            entry.target.classList.add('animate-in');
+            observer.unobserve(entry.target);
+          }
+        });
+      }, { threshold: 0.1, rootMargin: '0px 0px -40px 0px' });
+      elems.forEach(function(el) { observer.observe(el); });
+    })();
+
+    // ── Founder Image Runtime Check ──
+    (function() {
+      var img = new Image();
+      img.onload = function() {
+        var wrapper = document.querySelector('.founder-photo-wrapper');
+        var svgEl = document.getElementById('founderImg');
+        if (wrapper && svgEl) {
+          var imgEl = document.createElement('img');
+          imgEl.src = 'assets/founder.png';
+          imgEl.alt = 'Founder photo';
+          imgEl.style.width = '100%';
+          imgEl.style.height = '100%';
+          imgEl.style.objectFit = 'cover';
+          wrapper.replaceChild(imgEl, svgEl);
+        }
+      };
+      img.onerror = function() { /* keep SVG placeholder */ };
+      img.src = 'assets/founder.png';
+    })();
+
+    // ── Contact Form ──
+    var contactForm = document.getElementById('contactForm');
+    var toast = document.getElementById('toast');
+    contactForm.addEventListener('submit', function(e) {
+      e.preventDefault();
+      var valid = true;
+      var name = document.getElementById('contactName');
+      var email = document.getElementById('contactEmail');
+      var message = document.getElementById('contactMessage');
+      var nameErr = document.getElementById('nameError');
+      var emailErr = document.getElementById('emailError');
+      var msgErr = document.getElementById('messageError');
+
+      nameErr.style.display = 'none';
+      emailErr.style.display = 'none';
+      msgErr.style.display = 'none';
+
+      if (!name.value.trim()) { nameErr.style.display = 'block'; valid = false; }
+      if (!email.value.trim() || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email.value)) { emailErr.style.display = 'block'; valid = false; }
+      if (!message.value.trim()) { msgErr.style.display = 'block'; valid = false; }
+
+      if (valid) {
+        contactForm.reset();
+        toast.classList.add('show');
+        setTimeout(function() { toast.classList.remove('show'); }, 3500);
+      }
+    });
+
+    // ── Donate Section ──
+    var donateAmounts = document.querySelectorAll('.donate-amount');
+    var customAmountInput = document.getElementById('customAmount');
+    var selectedAmount = 35;
+
+    donateAmounts.forEach(function(btn) {
+      btn.addEventListener('click', function() {
+        donateAmounts.forEach(function(b) { b.classList.remove('active'); });
+        btn.classList.add('active');
+        selectedAmount = parseInt(btn.dataset.amount);
+        customAmountInput.value = '';
+      });
+    });
+
+    customAmountInput.addEventListener('input', function() {
+      if (this.value) {
+        donateAmounts.forEach(function(b) { b.classList.remove('active'); });
+        selectedAmount = parseInt(this.value) || 0;
+      }
+    });
+
+    var donateBtn = document.getElementById('donateBtn');
+    var donateModal = document.getElementById('donateModal');
+    var donateModalText = document.getElementById('donateModalText');
+
+    donateBtn.addEventListener('click', function() {
+      var amt = selectedAmount;
+      if (customAmountInput.value) amt = parseInt(customAmountInput.value) || 0;
+      if (amt <= 0) {
+        customAmountInput.style.borderColor = '#D94E4E';
+        return;
+      }
+      customAmountInput.style.borderColor = '';
+      donateModalText.textContent = 'Your generous donation of $' + amt + ' will help us rescue meals and deliver them to families in need. Thank you!';
+      donateModal.classList.add('active');
+    });
+
+    function closeDonateModal() {
+      donateModal.classList.remove('active');
+    }
+
+    donateModal.addEventListener('click', function(e) {
+      if (e.target === donateModal) closeDonateModal();
+    });
+  </script>
+</body>
+</html>
